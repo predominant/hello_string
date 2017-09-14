@@ -1,29 +1,30 @@
 package main
 
 import (
-    "encoding/json"
-    "fmt"
-    "os"
-    "net/http"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
 )
 
+// Config for the web server response
 type Config struct {
-    Message string
+	Message string
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    file, _ := os.Open("conf.json")
-    decoder := json.NewDecoder(file)
-    config := Config{}
-    err := decoder.Decode(&config)
-    if err != nil {
-        fmt.Println("error:", err)
-    }
+	file, _ := os.Open("conf.json")
+	decoder := json.NewDecoder(file)
+	config := Config{}
+	err := decoder.Decode(&config)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
 
-    fmt.Fprintf(w, "Hello: %s", config.Message)
+	fmt.Fprintf(w, "Hello: %s", config.Message)
 }
 
 func main() {
-    http.HandleFunc("/", handler)
-    http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 }
